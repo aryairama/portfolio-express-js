@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
 const bcrypt = require('bcrypt');
 const authQuery = require('../models/query/auth');
-const { responseError, responseCookie } = require('../helpers/helpers');
+const { responseError, responseCookie, response } = require('../helpers/helpers');
 const { genAccessToken, genRefreshToken } = require('../helpers/jwt');
+const { redis } = require('../configs/redis');
 
 const login = async (req, res, next) => {
   try {
@@ -40,4 +42,23 @@ const login = async (req, res, next) => {
   }
 };
 
-module.exports = { login };
+const logout = (req, res, next) => {
+  try {
+    redis.del(`${process.env.PREFIX_REDIS}jwtRefToken-${req.userLogin.user_id}`, async (error, result) => {
+      if (error) {
+        next(error);
+      } else {
+        res.clearCookie('authMyPortfolio', {
+          httpOnly: true,
+          secure: true,
+          sameSite: 'none',
+        });
+        response(res, 'Logout', 200, 'Logout success', []);
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { login, logout };
