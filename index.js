@@ -5,6 +5,7 @@ require('dotenv').config();
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
+const AuthRouter = require('./src/routes/Auth');
 const { responseError } = require('./src/helpers/helpers');
 
 const app = express();
@@ -25,6 +26,7 @@ app.use(
 );
 app.use(cookieParser());
 app.use(express.json());
+app.use('/auth', AuthRouter);
 app.use('*', (req, res, next) => {
   next(new Error('Endpoint Not Found'));
 });

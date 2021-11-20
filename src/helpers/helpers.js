@@ -42,7 +42,7 @@ const promiseResolveReject = (resolve, reject, error, result) => {
 
 const responseCookie = (res, status, statusCode, message, data, dataCookie, optionCookie) => {
   res
-    .cookie('authCoffeeShop', dataCookie, { ...optionCookie })
+    .cookie('authMyPortfolio', dataCookie, { ...optionCookie })
     .status(statusCode)
     .json({
       status,
